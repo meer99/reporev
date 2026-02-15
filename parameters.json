@@ -1,6 +1,6 @@
 {
   "parameters": {
-    "location": { "value": "eastus" },
+    "location": { "value": "australiaeast" },
     "tags": { "value": { "owner": "infra", "app": "revbc", "env": "sit" } },
     "vnetName": { "value": "vnet-ae-revbc" },
     "subnetName": { "value": "snet-ae-revbc" },

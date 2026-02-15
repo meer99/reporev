@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.39.26.7824",
-      "templateHash": "3867291785143389023"
+      "templateHash": "14514364003208771649"
     }
   },
   "parameters": {
@@ -331,7 +331,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.39.26.7824",
-              "templateHash": "17539147011858988655"
+              "templateHash": "11900436754760663686"
             }
           },
           "parameters": {
@@ -350,10 +350,6 @@
             "internalOnly": {
               "type": "bool",
               "defaultValue": true
-            },
-            "publicNetworkAccess": {
-              "type": "string",
-              "defaultValue": "Disabled"
             }
           },
           "resources": [
@@ -364,7 +360,6 @@
               "location": "[parameters('location')]",
               "tags": "[parameters('tags')]",
               "properties": {
-                "publicNetworkAccess": "[parameters('publicNetworkAccess')]",
                 "appLogsConfiguration": {
                   "logAnalyticsConfiguration": {
                     "customerId": "[reference(parameters('logAnalyticsId'), '2022-10-01', 'Full').customerId]",
