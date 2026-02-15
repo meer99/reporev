@@ -2,7 +2,7 @@ trigger: none
 pr: none
 
 variables:
-  serviceConnection: 'YOUR-AZURE-SC'   # set this to your service connection name
+  serviceConnection: 'ado-bcsit'   # set this to your service connection name
   rgName: 'rg-ae-revbc'
 
 stages:
@@ -16,7 +16,7 @@ stages:
     - task: AzureCLI@2
       displayName: Bicep Lint
       inputs:
-        azureSubscription: $(ado-bcsit)
+        azureSubscription: $(serviceConnection)
         scriptType: bash
         scriptLocation: inlineScript
         inlineScript: |
