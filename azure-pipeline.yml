@@ -21,7 +21,14 @@ stages:
         scriptType: bash
         scriptLocation: inlineScript
         inlineScript: |
-          az bicep build --file "$(Build.Repository.LocalPath)/main.bicep"
+          ROOT="$(Build.SourcesDirectory)"
+          if [ ! -f "$ROOT/main.bicep" ]; then ROOT="$ROOT/$(Build.Repository.Name)"; fi
+          if [ ! -f "$ROOT/main.bicep" ]; then
+            echo "main.bicep not found under $(Build.SourcesDirectory)"
+            find "$(Build.SourcesDirectory)" -maxdepth 4 -name main.bicep
+            exit 1
+          fi
+          az bicep build --file "$ROOT/main.bicep"
 
 - stage: SIT
   dependsOn: Build
@@ -40,10 +47,17 @@ stages:
               scriptType: bash
               scriptLocation: inlineScript
               inlineScript: |
+                ROOT="$(Build.SourcesDirectory)"
+                if [ ! -f "$ROOT/main.bicep" ]; then ROOT="$ROOT/$(Build.Repository.Name)"; fi
+                if [ ! -f "$ROOT/main.bicep" ]; then
+                  echo "main.bicep not found under $(Build.SourcesDirectory)"
+                  find "$(Build.SourcesDirectory)" -maxdepth 4 -name main.bicep
+                  exit 1
+                fi
                 az deployment group create \
                   --resource-group $(rgName) \
-                  --template-file "$(Build.Repository.LocalPath)/main.bicep" \
-                  --parameters @"$(Build.Repository.LocalPath)/parameters.json" \
+                  --template-file "$ROOT/main.bicep" \
+                  --parameters @"$ROOT/parameters.json" \
                   --parameters tags='{"owner":"infra","app":"revbc","env":"sit"}'
 
           - task: AzureCLI@2
@@ -53,7 +67,9 @@ stages:
               scriptType: bash
               scriptLocation: inlineScript
               inlineScript: |
-                cd "$(Build.Repository.LocalPath)"
+                ROOT="$(Build.SourcesDirectory)"
+                if [ ! -f "$ROOT/main.bicep" ]; then ROOT="$ROOT/$(Build.Repository.Name)"; fi
+                cd "$ROOT"
                 az acr login --name acraetestrevbc
                 docker build -t acraetestrevbc.azurecr.io/app:$(Build.BuildId) .
                 docker push acraetestrevbc.azurecr.io/app:$(Build.BuildId)
@@ -76,10 +92,17 @@ stages:
               scriptType: bash
               scriptLocation: inlineScript
               inlineScript: |
+                ROOT="$(Build.SourcesDirectory)"
+                if [ ! -f "$ROOT/main.bicep" ]; then ROOT="$ROOT/$(Build.Repository.Name)"; fi
+                if [ ! -f "$ROOT/main.bicep" ]; then
+                  echo "main.bicep not found under $(Build.SourcesDirectory)"
+                  find "$(Build.SourcesDirectory)" -maxdepth 4 -name main.bicep
+                  exit 1
+                fi
                 az deployment group create \
                   --resource-group $(rgName) \
-                  --template-file "$(Build.Repository.LocalPath)/main.bicep" \
-                  --parameters @"$(Build.Repository.LocalPath)/parameters.json" \
+                  --template-file "$ROOT/main.bicep" \
+                  --parameters @"$ROOT/parameters.json" \
                   --parameters tags='{"owner":"infra","app":"revbc","env":"uat"}'
 
 - stage: PROD
@@ -100,8 +123,15 @@ stages:
               scriptType: bash
               scriptLocation: inlineScript
               inlineScript: |
+                ROOT="$(Build.SourcesDirectory)"
+                if [ ! -f "$ROOT/main.bicep" ]; then ROOT="$ROOT/$(Build.Repository.Name)"; fi
+                if [ ! -f "$ROOT/main.bicep" ]; then
+                  echo "main.bicep not found under $(Build.SourcesDirectory)"
+                  find "$(Build.SourcesDirectory)" -maxdepth 4 -name main.bicep
+                  exit 1
+                fi
                 az deployment group create \
                   --resource-group $(rgName) \
-                  --template-file "$(Build.Repository.LocalPath)/main.bicep" \
-                  --parameters @"$(Build.Repository.LocalPath)/parameters.json" \
+                  --template-file "$ROOT/main.bicep" \
+                  --parameters @"$ROOT/parameters.json" \
                   --parameters tags='{"owner":"infra","app":"revbc","env":"prod"}'
