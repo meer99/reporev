@@ -1,0 +1,102 @@
+trigger: none
+pr: none
+
+variables:
+  serviceConnection: 'YOUR-AZURE-SC'   # set this to your service connection name
+  rgName: 'rg-ae-revbc'
+
+stages:
+- stage: Build
+  displayName: Validate Bicep
+  jobs:
+  - job: lint
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - task: AzureCLI@2
+      displayName: Bicep Lint
+      inputs:
+        azureSubscription: $(serviceConnection)
+        scriptType: bash
+        scriptLocation: inlineScript
+        inlineScript: |
+          az bicep build --file main.bicep
+
+- stage: SIT
+  dependsOn: Build
+  jobs:
+  - deployment: deploy_sit
+    environment: SIT
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: AzureCLI@2
+            displayName: Deploy SIT
+            inputs:
+              azureSubscription: $(serviceConnection)
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
+                az deployment group create \
+                  --resource-group $(rgName) \
+                  --template-file main.bicep \
+                  --parameters @parameters.json \
+                  --parameters tags='{"owner":"infra","app":"revbc","env":"sit"}'
+
+          - task: AzureCLI@2
+            displayName: Push Image to ACR (SIT)
+            inputs:
+              azureSubscription: $(serviceConnection)
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
+                az acr login --name acraetestrevbc
+                docker build -t acraetestrevbc.azurecr.io/app:$(Build.BuildId) .
+                docker push acraetestrevbc.azurecr.io/app:$(Build.BuildId)
+
+- stage: UAT
+  dependsOn: SIT
+  condition: succeeded()
+  jobs:
+  - deployment: deploy_uat
+    environment: UAT
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: AzureCLI@2
+            displayName: Deploy UAT
+            inputs:
+              azureSubscription: $(serviceConnection)
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
+                az deployment group create \
+                  --resource-group $(rgName) \
+                  --template-file main.bicep \
+                  --parameters @parameters.json \
+                  --parameters tags='{"owner":"infra","app":"revbc","env":"uat"}'
+
+- stage: PROD
+  dependsOn: UAT
+  condition: succeeded()
+  jobs:
+  - deployment: deploy_prod
+    environment: PROD
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: AzureCLI@2
+            displayName: Deploy PROD
+            inputs:
+              azureSubscription: $(serviceConnection)
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
+                az deployment group create \
+                  --resource-group $(rgName) \
+                  --template-file main.bicep \
+                  --parameters @parameters.json \
+                  --parameters tags='{"owner":"infra","app":"revbc","env":"prod"}'

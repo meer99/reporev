@@ -1,0 +1,25 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "parameters": {
+    "location": { "value": "eastus" },
+    "tags": { "value": { "owner": "infra", "app": "revbc", "env": "sit" } },
+    "vnetName": { "value": "vnet-ae-revbc" },
+    "subnetName": { "value": "snet-ae-revbc" },
+    "userAssignedIdentityName": { "value": "mi-ae-revbc" },
+    "logAnalyticsName": { "value": "log-ae-revbc" },
+    "acrName": { "value": "acraetestrevbc" },
+    "caeName": { "value": "cae-ae-revbc" },
+    "caJob1Name": { "value": "caj-ae-bill" },
+    "caJob2Name": { "value": "caj-ae-data" },
+    "sqlServerName": { "value": "sql-ae-revbc" },
+    "sqlDbName": { "value": "db-ae-revbc" },
+    "sqlAdminLogin": { "value": "sqladminuser" },
+    "sqlAdminPassword": { "value": "REPLACE_WITH_SECRET_OR_KV_REFERENCE" },
+    "sqlSkuName": { "value": "Standard" },
+    "sqlDtu": { "value": 10 },
+    "sqlMaxSizeBytes": { "value": 5368709120 },
+    "peAcrName": { "value": "pe-ae-cr" },
+    "peCaeName": { "value": "pe-ae-cae" },
+    "peSqlName": { "value": "pe-ae-sql" }
+  }
+}
