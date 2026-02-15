@@ -3,13 +3,14 @@ param location string
 param tags object
 param logAnalyticsId string
 param internalOnly bool = true
-param publicNetworkAccess string = 'Disabled'
+//param publicNetworkAccess string = 'Disabled'
 
 resource env 'Microsoft.App/managedEnvironments@2024-03-01' = {
   name: name
   location: location
   tags: tags
   properties: {
+    //publicNetworkAccess: publicNetworkAccess
     appLogsConfiguration: {
       logAnalyticsConfiguration: {
         customerId: reference(logAnalyticsId, '2022-10-01', 'Full').customerId

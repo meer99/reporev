@@ -1,5 +1,3 @@
-import './parameters.bicep' as p
-
 param location string
 param tags object
 param vnetName string
@@ -99,6 +97,7 @@ module db './modules/sql-database.bicep' = {
   name: 'db'
   params: {
     name: sqlDbName
+    location: location
     tags: tags
     serverName: sqlServerName
     skuName: sqlSkuName
