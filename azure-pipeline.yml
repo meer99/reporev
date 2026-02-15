@@ -16,7 +16,7 @@ stages:
     - task: AzureCLI@2
       displayName: Bicep Lint
       inputs:
-        azureSubscription: $(serviceConnection)
+        azureSubscription: $(ado-bcsit)
         scriptType: bash
         scriptLocation: inlineScript
         inlineScript: |
@@ -34,7 +34,7 @@ stages:
           - task: AzureCLI@2
             displayName: Deploy SIT
             inputs:
-              azureSubscription: $(serviceConnection)
+              azureSubscription: $(ado-bcsit)
               scriptType: bash
               scriptLocation: inlineScript
               inlineScript: |
@@ -47,7 +47,7 @@ stages:
           - task: AzureCLI@2
             displayName: Push Image to ACR (SIT)
             inputs:
-              azureSubscription: $(serviceConnection)
+              azureSubscription: $(ado-bcsit)
               scriptType: bash
               scriptLocation: inlineScript
               inlineScript: |
@@ -68,7 +68,7 @@ stages:
           - task: AzureCLI@2
             displayName: Deploy UAT
             inputs:
-              azureSubscription: $(serviceConnection)
+              azureSubscription: $(ado-bcsit)
               scriptType: bash
               scriptLocation: inlineScript
               inlineScript: |
@@ -91,7 +91,7 @@ stages:
           - task: AzureCLI@2
             displayName: Deploy PROD
             inputs:
-              azureSubscription: $(serviceConnection)
+              azureSubscription: $(ado-bcsit)
               scriptType: bash
               scriptLocation: inlineScript
               inlineScript: |
