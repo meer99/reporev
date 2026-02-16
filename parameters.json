@@ -13,7 +13,7 @@
     "sqlServerName": { "value": "sql-ae-revbc" },
     "sqlDbName": { "value": "db-ae-revbc" },
     "sqlAdminLogin": { "value": "sqladminuser" },
-    "sqlAdminPassword": { "value": "REPLACE_WITH_SECRET_OR_KV_REFERENCE" },
+    "sqlAdminPassword": { "value": "Revbc!Az2026Strong#1" },
     "sqlSkuName": { "value": "Standard" },
     "sqlDtu": { "value": 10 },
     "sqlMaxSizeBytes": { "value": 5368709120 },

@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.39.26.7824",
-      "templateHash": "14514364003208771649"
+      "templateHash": "427370956287804810"
     }
   },
   "parameters": {
@@ -331,7 +331,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.39.26.7824",
-              "templateHash": "11900436754760663686"
+              "templateHash": "6265113389716508691"
             }
           },
           "parameters": {
@@ -361,6 +361,7 @@
               "tags": "[parameters('tags')]",
               "properties": {
                 "appLogsConfiguration": {
+                  "destination": "log-analytics",
                   "logAnalyticsConfiguration": {
                     "customerId": "[reference(parameters('logAnalyticsId'), '2022-10-01', 'Full').customerId]",
                     "sharedKey": "[listKeys(parameters('logAnalyticsId'), '2022-10-01').primarySharedKey]"
@@ -760,7 +761,10 @@
             }
           ]
         }
-      }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'sql')]"
+      ]
     },
     {
       "type": "Microsoft.Resources/deployments",

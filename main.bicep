@@ -104,6 +104,9 @@ module db './modules/sql-database.bicep' = {
     maxSizeBytes: sqlMaxSizeBytes
     dtu: sqlDtu
   }
+  dependsOn: [
+    sql
+  ]
 }
 
 module peAcr './modules/private-endpoint.bicep' = {
